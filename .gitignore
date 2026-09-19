@@ -2,6 +2,7 @@
 # When adding a new source file, add it here deliberately.
 /*
 !/README.md
+!/download.html
 !/.gitignore
 
 !/.github/
@@ -9,6 +10,7 @@
 !/.github/workflows/
 /.github/workflows/*
 !/.github/workflows/release.yml
+!/.github/workflows/maintenance.yml
 
 !/Add_on/
 /Add_on/*

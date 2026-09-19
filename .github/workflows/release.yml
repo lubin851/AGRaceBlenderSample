@@ -66,7 +66,6 @@ jobs:
           package="dist/pages/agrace_tools-${EXTENSION_VERSION}.zip"
           test -f "$package"
           "$BLENDER_BINARY" --background --factory-startup --command extension validate "$package"
-          cp "$package" dist/release/agrace_tools.zip
 
       - name: Verify Blender sample dependencies
         run: |
@@ -98,6 +97,7 @@ jobs:
           "$BLENDER_BINARY" --background --factory-startup --command extension server-generate \
             --repo-dir dist/pages
           cp README.md dist/pages/README.md
+          cp download.html dist/pages/download.html
           python3 - <<'PY'
           import json
           import os
@@ -127,6 +127,6 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "$GITHUB_REF_NAME" \
-            dist/release/agrace_tools.zip \
+            "dist/pages/agrace_tools-${EXTENSION_VERSION}.zip" \
             dist/release/AGRaceCourse_Template.zip \
             --verify-tag --generate-notes --title "$GITHUB_REF_NAME"

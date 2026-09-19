@@ -18,7 +18,7 @@ Blender内で更新したい場合は、`Edit > Preferences > Get Extensions`の
 
 リモートの一覧を更新して`AGRace Tools`を検索・インストールし、有効にします。3D Viewportで`N`を押すと`AGRace Tools`タブが開きます。
 
-ZIPを直接使う場合は、[最新版ZIP](https://github.com/lubin851/AGRaceBlenderSample/releases/latest/download/agrace_tools.zip)を展開せず保存し、右上メニューの`Install from Disk`で指定します。ZIPファイルをBlenderウィンドウへドラッグ＆ドロップしてもインストールできます。
+ZIPを直接使う場合は、[最新版ZIP](https://lubin851.github.io/AGRaceBlenderSample/download.html?file=addon)を展開せず保存し、右上メニューの`Install from Disk`で指定します。ZIPファイルをBlenderウィンドウへドラッグ＆ドロップしてもインストールできます。
 
 `Install from Disk`はローカルリポジトリへの導入です。この方法で入れたものはリモートリポジトリからの更新対象になりません。
 
@@ -231,7 +231,7 @@ For updates within Blender, open `Edit > Preferences > Get Extensions`, choose `
 
 Refresh the remote listing, search for and install `AGRace Tools`, and enable it. Press `N` in the 3D Viewport to open the `AGRace Tools` tab.
 
-For a direct ZIP installation, save the [latest ZIP](https://github.com/lubin851/AGRaceBlenderSample/releases/latest/download/agrace_tools.zip) without extracting it, then choose `Install from Disk` from the upper-right menu. You can also drag and drop the ZIP into Blender.
+For a direct ZIP installation, save the [latest ZIP](https://lubin851.github.io/AGRaceBlenderSample/download.html?file=addon) without extracting it, then choose `Install from Disk` from the upper-right menu. You can also drag and drop the ZIP into Blender.
 
 `Install from Disk` installs into a local repository. Extensions installed this way do not receive updates from the remote repository.
 

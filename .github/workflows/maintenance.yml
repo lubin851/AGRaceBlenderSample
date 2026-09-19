@@ -1,0 +1,251 @@
+name: Maintain AGRace distribution
+
+on:
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: 'pages: republish the download page; sample: replace the sample ZIP'
+        required: true
+        type: choice
+        options:
+          - pages
+          - sample
+      target_tag:
+        description: 'Current latest release tag, for example v0.3.0'
+        required: true
+        type: string
+      confirmation:
+        description: 'For sample replacement only, enter REPLACE_SAMPLE'
+        required: false
+        type: string
+
+concurrency:
+  group: agrace-release
+  cancel-in-progress: false
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      version: ${{ steps.check.outputs.version }}
+    steps:
+      - name: Check out current source
+        uses: actions/checkout@v4
+
+      - name: Check branch, release, and extension version
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_TAG: ${{ inputs.target_tag }}
+        run: |
+          if [ "$GITHUB_REF" != 'refs/heads/main' ]; then
+            echo 'Run this maintenance workflow from main.' >&2
+            exit 1
+          fi
+          python3 - <<'PY'
+          import os
+          import re
+          import tomllib
+          from pathlib import Path
+
+          tag = os.environ['TARGET_TAG']
+          manifest = tomllib.loads(Path('Add_on/AGRaceTools/agrace_tools/blender_manifest.toml').read_text(encoding='utf-8'))
+          version = manifest['version']
+          if manifest['id'] != 'agrace_tools' or not re.fullmatch(r'v\d+\.\d+\.\d+', tag) or tag != f'v{version}':
+              raise SystemExit(f'Tag {tag!r} must match the agrace_tools manifest version {version!r}')
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as output:
+              output.write(f'version={version}\n')
+          PY
+          latest_tag="$(gh release view --json tagName --jq '.tagName')"
+          if [ "$latest_tag" != "$TARGET_TAG" ]; then
+            echo "Target $TARGET_TAG is not the latest release ($latest_tag)." >&2
+            exit 1
+          fi
+
+  pages:
+    if: inputs.operation == 'pages'
+    needs: preflight
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TARGET_TAG: ${{ inputs.target_tag }}
+      EXTENSION_VERSION: ${{ needs.preflight.outputs.version }}
+    steps:
+      - name: Check out current distribution page
+        uses: actions/checkout@v4
+
+      - name: Download the released extension ZIP
+        run: |
+          mkdir -p dist/pages
+          gh release download "$TARGET_TAG" \
+            --pattern "agrace_tools-${EXTENSION_VERSION}.zip" \
+            --dir dist/pages
+          test -f "dist/pages/agrace_tools-${EXTENSION_VERSION}.zip"
+
+      - name: Download Blender 5.1.1
+        run: |
+          curl --fail --location --retry 3 \
+            --output "$RUNNER_TEMP/blender.tar.xz" \
+            https://download.blender.org/release/Blender5.1/blender-5.1.1-linux-x64.tar.xz
+          tar --extract --file "$RUNNER_TEMP/blender.tar.xz" --directory "$RUNNER_TEMP"
+          blender_binary="$RUNNER_TEMP/blender-5.1.1-linux-x64/blender"
+          "$blender_binary" --version
+          echo "BLENDER_BINARY=$blender_binary" >> "$GITHUB_ENV"
+
+      - name: Validate the ZIP and regenerate the Blender repository
+        run: |
+          "$BLENDER_BINARY" --background --factory-startup --command extension validate \
+            "dist/pages/agrace_tools-${EXTENSION_VERSION}.zip"
+          "$BLENDER_BINARY" --background --factory-startup --command extension server-generate \
+            --repo-dir dist/pages
+          cp README.md dist/pages/README.md
+          cp download.html dist/pages/download.html
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          index = json.loads(Path('dist/pages/index.json').read_text(encoding='utf-8'))
+          packages = index['data']
+          expected = f"./agrace_tools-{os.environ['EXTENSION_VERSION']}.zip"
+          if len(packages) != 1 or packages[0]['id'] != 'agrace_tools' or packages[0]['archive_url'] != expected:
+              raise SystemExit('The repository index must contain only the latest AGRace Tools ZIP')
+          PY
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload GitHub Pages files
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist/pages
+
+      - name: Publish the Blender repository
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  sample:
+    if: inputs.operation == 'sample'
+    needs: preflight
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TARGET_TAG: ${{ inputs.target_tag }}
+    steps:
+      - name: Require explicit sample replacement confirmation
+        env:
+          CONFIRMATION: ${{ inputs.confirmation }}
+        run: |
+          if [ "$CONFIRMATION" != 'REPLACE_SAMPLE' ]; then
+            echo 'Enter REPLACE_SAMPLE in the confirmation field.' >&2
+            exit 1
+          fi
+
+      - name: Require a mutable release
+        run: |
+          immutable="$(gh release view "$TARGET_TAG" --json isImmutable --jq '.isImmutable')"
+          if [ "$immutable" != 'false' ]; then
+            echo "Release $TARGET_TAG is immutable or its state could not be confirmed." >&2
+            exit 1
+          fi
+
+      - name: Check out current Blender sample
+        uses: actions/checkout@v4
+
+      - name: Download Blender 5.1.1
+        run: |
+          curl --fail --location --retry 3 \
+            --output "$RUNNER_TEMP/blender.tar.xz" \
+            https://download.blender.org/release/Blender5.1/blender-5.1.1-linux-x64.tar.xz
+          tar --extract --file "$RUNNER_TEMP/blender.tar.xz" --directory "$RUNNER_TEMP"
+          blender_binary="$RUNNER_TEMP/blender-5.1.1-linux-x64/blender"
+          "$blender_binary" --version
+          echo "BLENDER_BINARY=$blender_binary" >> "$GITHUB_ENV"
+
+      - name: Verify Blender sample dependencies
+        run: |
+          "$BLENDER_BINARY" --background --factory-startup --disable-autoexec \
+            BlenderSample/AGRaceCourse_Template.blend --python-exit-code 1 \
+            --python-expr "import bpy, os; assert not bpy.data.libraries, 'Linked Blender libraries found'; missing = [image.filepath for image in bpy.data.images if image.source == 'FILE' and image.filepath and not image.packed_file and not os.path.isfile(bpy.path.abspath(image.filepath))]; assert not missing, 'Missing images: ' + repr(missing)"
+
+      - name: Package the Blender sample without backup files
+        run: |
+          mkdir -p dist/release
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZIP_DEFLATED, ZipFile
+
+          sample = Path('BlenderSample')
+          blend = sample / 'AGRaceCourse_Template.blend'
+          textures = sample / 'Texture'
+          if not blend.is_file() or not textures.is_dir():
+              raise SystemExit('The .blend file or Texture directory is missing')
+          files = [blend, *(path for path in sorted(textures.rglob('*')) if path.is_file())]
+          if len(files) == 1:
+              raise SystemExit('No sample textures were found')
+          with ZipFile('dist/release/AGRaceCourse_Template.zip', 'w', ZIP_DEFLATED) as archive:
+              for path in files:
+                  archive.write(path, path.as_posix())
+          PY
+
+      - name: Back up the existing sample ZIP
+        run: |
+          mkdir -p dist/backup
+          gh release download "$TARGET_TAG" \
+            --pattern AGRaceCourse_Template.zip \
+            --dir dist/backup
+          test -f dist/backup/AGRaceCourse_Template.zip
+
+      - name: Keep a recovery copy in this workflow run
+        uses: actions/upload-artifact@v4
+        with:
+          name: sample-before-${{ inputs.target_tag }}-${{ github.run_id }}
+          path: dist/backup/AGRaceCourse_Template.zip
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Replace only the sample asset if its content changed
+        id: replacement
+        run: |
+          if python3 - <<'PY'
+          from zipfile import ZipFile
+
+          old_path = 'dist/backup/AGRaceCourse_Template.zip'
+          new_path = 'dist/release/AGRaceCourse_Template.zip'
+          with ZipFile(old_path) as old, ZipFile(new_path) as new:
+              old_names = sorted(old.namelist())
+              new_names = sorted(new.namelist())
+              if old_names != new_names or any(old.read(name) != new.read(name) for name in old_names):
+                  raise SystemExit(1)
+          PY
+          then
+            echo 'The sample content is unchanged; no Release asset was replaced.'
+            echo 'replaced=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if ! gh release upload "$TARGET_TAG" dist/release/AGRaceCourse_Template.zip --clobber; then
+            echo 'Replacement failed. Trying to restore the backup asset.' >&2
+            gh release upload "$TARGET_TAG" dist/backup/AGRaceCourse_Template.zip || true
+            exit 1
+          fi
+          echo 'replaced=true' >> "$GITHUB_OUTPUT"
+
+      - name: Verify the published sample ZIP
+        if: steps.replacement.outputs.replaced == 'true'
+        run: |
+          mkdir -p dist/verified
+          gh release download "$TARGET_TAG" \
+            --pattern AGRaceCourse_Template.zip \
+            --dir dist/verified
+          cmp dist/release/AGRaceCourse_Template.zip dist/verified/AGRaceCourse_Template.zip
