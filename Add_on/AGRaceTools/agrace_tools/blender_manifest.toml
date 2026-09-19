@@ -1,0 +1,25 @@
+schema_version = "1.0.0"
+
+id = "agrace_tools"
+version = "0.3.0"
+name = "AGRace Tools"
+tagline = "Specialized mesh utilities for AGRace course authoring"
+maintainer = "尾黒こう (Ryuban)"
+type = "add-on"
+
+blender_version_min = "5.0.0"
+
+license = [
+  "SPDX:GPL-3.0-or-later",
+]
+
+copyright = [
+  "2026 尾黒こう (Ryuban)",
+]
+
+[build]
+paths_exclude_pattern = [
+  "__pycache__/",
+  ".*",
+  "*.zip",
+]

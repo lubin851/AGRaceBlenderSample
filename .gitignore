@@ -1,0 +1,36 @@
+# Only the explicitly listed source, sample, and distribution files are published.
+# When adding a new source file, add it here deliberately.
+/*
+!/README.md
+!/.gitignore
+
+!/.github/
+/.github/*
+!/.github/workflows/
+/.github/workflows/*
+!/.github/workflows/release.yml
+
+!/Add_on/
+/Add_on/*
+!/Add_on/AGRaceTools/
+/Add_on/AGRaceTools/*
+!/Add_on/AGRaceTools/agrace_tools/
+/Add_on/AGRaceTools/agrace_tools/*
+!/Add_on/AGRaceTools/agrace_tools/__init__.py
+!/Add_on/AGRaceTools/agrace_tools/blender_manifest.toml
+!/Add_on/AGRaceTools/agrace_tools/CHANGELOG.md
+!/Add_on/AGRaceTools/agrace_tools/cylinder_transition.py
+!/Add_on/AGRaceTools/agrace_tools/edge_curve.py
+!/Add_on/AGRaceTools/agrace_tools/LICENSE.txt
+!/Add_on/AGRaceTools/agrace_tools/name_sync.py
+!/Add_on/AGRaceTools/agrace_tools/NOTICE.md
+!/Add_on/AGRaceTools/agrace_tools/object_renamer.py
+!/Add_on/AGRaceTools/agrace_tools/README.md
+!/Add_on/AGRaceTools/agrace_tools/smooth_transition.py
+!/Add_on/AGRaceTools/agrace_tools/translations.py
+!/Add_on/AGRaceTools/agrace_tools/ui.py
+
+!/BlenderSample/
+/BlenderSample/*
+!/BlenderSample/AGRaceCourse_Template.blend
+!/BlenderSample/Texture/
