@@ -1,0 +1,28 @@
+## 配布・更新メモ
+
+アドオンのバージョンは`Add_on/AGRaceTools/agrace_tools/blender_manifest.toml`の`version`を正とし、タグは必ず同じ数字の`vX.Y.Z`。<br>
+タグはアドオンの更新の時のみ増やす。
+
+#### アドオンを更新する
+
+アドオン更新は他のサンプルや配布ページを同時に更新する。
+1. アドオンを変更したらManifestの`version`を更新し、必要なソースや説明も更新して`main`へpushする。
+2. その変更を含むcommitへ、Manifestと一致するタグ（例：`version = "0.3.1"`なら`v0.3.1`）を付けてpushする。GitHubのReleaseは作成しないこと。
+3. `Actions > Publish AGRace Blender files`の成功を確認する。Actionが自動で版付きアドオンZIP、サンプルZIP、Blender更新用の`index.json`と中継ページを公開し、新しいRelease出来上がる。
+4. READMEの２つのダウンロードリンクで保存名と内容を確認し、Blender側でもリモートリポジトリの一覧更新を確認する。READMEのリンクはPagesのDLリンクを中継して開くか確認する。
+
+#### 配布ページのみを再ジェネレートする
+
+1. `README.md`や`download.html`を修正して`main`へpushします。アドオンのManifestと最新版Releaseのタグは一致したままにする。
+2. `Actions > Maintain AGRace distribution > Run workflow`を開き、Branchを`main`、`operation`を`pages`、`target_tag`を最新版Releaseのタグ、`confirmation`は空欄にして実行する。
+3. 成功後、Blender用の`index.json`とREADMEの２つのダウンロードリンクを確認する。この操作は既存Releaseの版付きアドオンZIPを再利用し、アドオンZIPやReleaseは変更は起きない。
+
+#### サンプルのみを同じReleaseで差し替える
+
+1. `BlenderSample`の`.blend`や`Texture`を変更して`main`へpushする。
+2. `Actions > Maintain AGRace distribution > Run workflow`でBranchを`main`、`operation`を`sample`、`target_tag`を最新版Releaseのタグ、`confirmation`を`REPLACE_SAMPLE`にして実行する。
+3. Actionはサンプルの参照切れを確認してZIPを作り、従来のZIPをその実行のArtifactsへ30日間バックアップした後、Releaseの`AGRaceCourse_Template.zip`だけを差し替える。成功後、READMEのサンプルリンクを確認する。
+
+同名のRelease添付ファイルの差し替えは削除してから再アップロードするため、失敗時には元ファイルが一時的に失われる可能性があり。<br>
+失敗した場合は該当するActions実行画面のArtifactsから`sample-before-...`をダウンロードし、Releaseの添付状態を確認したうえで復旧する。<br>
+GitHubで「Immutable releases」が有効な場合、公開済みReleaseの添付ファイルは差し替えできない。
