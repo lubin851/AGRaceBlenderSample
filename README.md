@@ -1,4 +1,4 @@
-# For AGRaceSDK Course Model Sample
+# AGRaceSDK 用コースモデルサンプル
 AGRace の配布コースサンプルです。<br>
 Blender のサンプルとアドオンを公開しています。
 
