@@ -7,6 +7,8 @@ Blender のサンプルとアドオンを公開しています。<br>
 
 - [Blenderサンプル一式をダウンロード（.blendとTexture）](https://lubin851.github.io/AGRaceBlenderSample/download.html?file=sample)
 - [AGRace Toolsの最新版ZIPをダウンロード](https://lubin851.github.io/AGRaceBlenderSample/download.html?file=addon)
+- リポジトリを登録して更新通知を受け取る場合は、こちらのURLを登録してください。`https://lubin851.github.io/AGRaceBlenderSample/index.json`
+- アドオンの使い方：[アドオンのマニュアル](Add_on/AGRaceTools/agrace_tools/README.md)
 
 リンクをクリックすると、最新版のGitHub Releaseに添付されたZIPのダウンロードへ進みます。アドオンZIPのファイル名にはバージョンが付きます。サンプルZIPは展開し、`BlenderSample/AGRaceCourse_Template.blend`と`BlenderSample/Texture`の位置関係を保ってください。
 
@@ -53,41 +55,49 @@ ZIPを直接使う場合は、上の最新版ZIPを展開せずに保存し、`E
 
 ### Y軸スムーズ接続の簡単な使い方
 
-1. 同じMeshの編集モードで、ローカルY方向に離れた開いた辺列を2本用意し、頂点数を揃えます。両方の中央頂点（ローカルX=0）は同じ上下側に置きます。
-2. 接続する2本の辺列だけを選択します。
-3. `AGRace Tools > Y軸スムーズ接続`で分割数などを調整し、`スムーズ接続を生成（別OBJ）`を押します。
+このツールは形状が違う離れた辺同士を滑らか繋ぐ面を生成します。別オブジェクトで生成します。
+1. 同じオブジェクトに繋ぎたいコースの断面の辺を配置します。配置はY軸方向に任意の距離で離して配置します。
+2. +X軸方向のみの辺を残します。ミラー用にX軸の座標0に頂点があるようにします。
+3. X座標が０の頂点が+Y軸にあると上面扱い、-Y軸にあると下面扱いになります。両方置いて同時生成も可能です。
+4. 頂点数を同じにします。レイキャスト受けがある場合は辺の長さを変えないよう注意してください。
+5. 接続する2本の辺の頂点を選択します。
+6. `AGRace Tools > Y軸スムーズ接続`で分割数などを調整し、`スムーズ接続を生成（別OBJ）`を押します。Xミラーモディファイア付きのメッシュが生成されます。
 
 ### 円柱スムーズ接続の簡単な使い方
 
-1. 任意の辺から接続する場合は、Meshの編集モードでローカルX=0から+X側へ伸びる半幅の開いた辺列を1～2本選択します。
-2. `AGRace Tools > 円柱スムーズ接続`で生成タイプ、Y方向の長さ、半径などを設定し、`円柱スムーズ接続を生成（別OBJ）`を押します。
-3. `半円 → 円`は辺を選択せずに生成できます。
+このツールは離れた辺または、円柱に沿った断面形状へ滑らかに繋ぐ面を生成します。別オブジェクトで生成します。
+1. 任意の辺から接続する場合は、前述のY軸スムーズと同様に辺を配置します。配置した辺から+Y方向へ生成されます。上下面同時可能です。
+2. 生成したい頂点を選択します。
+3. 半円（任意の円弧） → 円の生成をする場合はツールからそのまま設定を行います。
+4. `AGRace Tools > 円柱スムーズ接続`で生成タイプ、Y方向の長さ、半径などを設定し、`円柱スムーズ接続を生成（別OBJ）`を押します。Xミラーモディファイア付きのメッシュが生成されます。
 
-どちらも元のMeshとは別のオブジェクトを生成します。入力条件や詳細設定は[アドオンのマニュアル](Add_on/AGRaceTools/agrace_tools/README.md)を参照してください。
+どちらも元のMeshとは別のオブジェクトを生成します。を参照してください。
 
-## 配布・更新メモ（管理者向け）
+## 配布・更新メモ
 
-アドオンのバージョンは`Add_on/AGRaceTools/agrace_tools/blender_manifest.toml`の`version`を正とし、タグは必ず同じ数字の`vX.Y.Z`にします。配布ページの修正だけを目的としてタグを増やさないでください。GitHubへのcommit・pushとActionsの手動実行は管理者が行います。
+アドオンのバージョンは`Add_on/AGRaceTools/agrace_tools/blender_manifest.toml`の`version`を正とし、タグは必ず同じ数字の`vX.Y.Z`。<br>
+タグはアドオンの更新の時のみ増やす。
 
-### アドオンを更新する通常のリリース
+#### アドオンを更新する
 
-1. アドオンを変更したらManifestの`version`を更新し、必要なソースや説明も更新して`main`へpushします。
-2. その変更を含むcommitへ、Manifestと一致するタグ（例：`version = "0.3.1"`なら`v0.3.1`）を付けてpushします。GitHubの「Create a new release」から先にReleaseを作らないでください。
-3. `Actions > Publish AGRace Blender files`の成功を確認します。Actionが版付きアドオンZIP、サンプルZIP、Blender更新用の`index.json`と中継ページを公開し、新しいReleaseを作成します。
-4. READMEの２つのダウンロードリンクで保存名と内容を確認し、Blender側でもリモートリポジトリの一覧更新を確認します。READMEのリンク自体は版ごとに変更しません。
+アドオン更新は他のサンプルや配布ページを同時に更新する。
+1. アドオンを変更したらManifestの`version`を更新し、必要なソースや説明も更新して`main`へpushする。
+2. その変更を含むcommitへ、Manifestと一致するタグ（例：`version = "0.3.1"`なら`v0.3.1`）を付けてpushする。GitHubのReleaseは作成しないこと。
+3. `Actions > Publish AGRace Blender files`の成功を確認する。Actionが自動で版付きアドオンZIP、サンプルZIP、Blender更新用の`index.json`と中継ページを公開し、新しいRelease出来上がる。
+4. READMEの２つのダウンロードリンクで保存名と内容を確認し、Blender側でもリモートリポジトリの一覧更新を確認する。READMEのリンクはPagesのDLリンクを中継して開くか確認する。
 
-### 配布ページだけを再公開する（タグ・Releaseは変更しない）
+#### 配布ページのみを再ジェネレートする
 
-1. `README.md`や`download.html`を修正して`main`へpushします。アドオンのManifestと最新版Releaseのタグは一致したままにします。
-2. `Actions > Maintain AGRace distribution > Run workflow`を開き、Branchを`main`、`operation`を`pages`、`target_tag`を最新版Releaseのタグにして実行します。`confirmation`は空欄で構いません。
-3. 成功後、Blender用の`index.json`とREADMEの２つのダウンロードリンクを確認します。この操作は既存Releaseの版付きアドオンZIPを再利用し、アドオンZIPやReleaseには触れません。
+1. `README.md`や`download.html`を修正して`main`へpushします。アドオンのManifestと最新版Releaseのタグは一致したままにする。
+2. `Actions > Maintain AGRace distribution > Run workflow`を開き、Branchを`main`、`operation`を`pages`、`target_tag`を最新版Releaseのタグ、`confirmation`は空欄にして実行する。
+3. 成功後、Blender用の`index.json`とREADMEの２つのダウンロードリンクを確認する。この操作は既存Releaseの版付きアドオンZIPを再利用し、アドオンZIPやReleaseは変更は起きない。
 
-### サンプルだけを同じReleaseで差し替える（例外）
+#### サンプルのみを同じReleaseで差し替える
 
-1. `BlenderSample`の`.blend`や`Texture`を変更して`main`へpushします。アドオンのManifest・タグ・アドオンZIPは変更しません。
-2. `Actions > Maintain AGRace distribution > Run workflow`でBranchを`main`、`operation`を`sample`、`target_tag`を最新版Releaseのタグ、`confirmation`を`REPLACE_SAMPLE`にして実行します。
-3. Actionはサンプルの参照切れを確認してZIPを作り、従来のZIPをその実行のArtifactsへ30日間バックアップした後、Releaseの`AGRaceCourse_Template.zip`だけを差し替えます。成功後、READMEのサンプルリンクを確認してください。
+1. `BlenderSample`の`.blend`や`Texture`を変更して`main`へpushする。
+2. `Actions > Maintain AGRace distribution > Run workflow`でBranchを`main`、`operation`を`sample`、`target_tag`を最新版Releaseのタグ、`confirmation`を`REPLACE_SAMPLE`にして実行する。
+3. Actionはサンプルの参照切れを確認してZIPを作り、従来のZIPをその実行のArtifactsへ30日間バックアップした後、Releaseの`AGRaceCourse_Template.zip`だけを差し替える。成功後、READMEのサンプルリンクを確認する。
 
-同名のRelease添付ファイルの差し替えは削除してから再アップロードするため、失敗時には元ファイルが一時的に失われる可能性があります。失敗した場合は該当するActions実行画面のArtifactsから`sample-before-...`をダウンロードし、Releaseの添付状態を確認したうえで復旧してください。GitHubで「Immutable releases」が有効な場合、公開済みReleaseの添付ファイルは差し替えられません。
-
-初回移行時の注意：公開済み`v0.3.0`には固定名の`agrace_tools.zip`しか添付されていません。管理者がそれをダウンロードして内容を変えずに`agrace_tools-0.3.0.zip`へ名前を変え、同じReleaseへ追加してください（旧ファイルは削除しません）。その後、上記`pages`操作を一度実行すると、新しい中継ページとREADMEリンクが使えるようになります。
+同名のRelease添付ファイルの差し替えは削除してから再アップロードするため、失敗時には元ファイルが一時的に失われる可能性があり。<br>
+失敗した場合は該当するActions実行画面のArtifactsから`sample-before-...`をダウンロードし、Releaseの添付状態を確認したうえで復旧する。<br>
+GitHubで「Immutable releases」が有効な場合、公開済みReleaseの添付ファイルは差し替えできない。
