@@ -1,11 +1,12 @@
 schema_version = "1.0.0"
 
 id = "agrace_tools"
-version = "0.3.0"
+version = "0.3.1"
 name = "AGRace Tools"
 tagline = "Specialized mesh utilities for AGRace course authoring"
 maintainer = "尾黒こう (Ryuban)"
 type = "add-on"
+website = "https://github.com/lubin851/AGRaceBlenderSample"
 
 blender_version_min = "5.0.0"
 
