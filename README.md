@@ -6,7 +6,7 @@ Blender のサンプルとアドオンを公開しています。<br>
 ## ダウンロード
 
 - [Blenderサンプル一式をダウンロード（.blendとTexture）](https://lubin851.github.io/AGRaceBlenderSample/download.html?file=sample)
-- [AGRace Toolsの最新版ZIPをダウンロード](https://lubin851.github.io/AGRaceBlenderSample/download.html?file=addon)
+- [AGRace ToolsのZIPをダウンロード](https://lubin851.github.io/AGRaceBlenderSample/download.html?file=addon)　※自動更新無し
 - リポジトリを登録して更新通知を受け取る場合は、こちらのURLを登録してください。`https://lubin851.github.io/AGRaceBlenderSample/index.json`
 - アドオンの使い方：[アドオンのマニュアル](Add_on/AGRaceTools/agrace_tools/README.md)
 
@@ -15,20 +15,18 @@ Blender のサンプルとアドオンを公開しています。<br>
 ## Blender サンプル
 
 モディファイアによるモデル製作例、コライダーモデルとビジュアルモデルの差分などを確認できます。
-同梱のテクスチャは改変元や参考に使用可能です。<br>
-AGRaceSDK には同じテクスチャと設定済みマテリアルがある為、それを利用してください。このテクスチャをそのまま配布する必要はありません。<br>
-ただし、テクスチャやモデルを改変・自作したものを配布する場合は自身のパッケージに含めるようにしてください。<br>
+同梱のテクスチャは改変に使用可能です。<br>
+未改変の際には AGRaceSDK に同じテクスチャと設定済みマテリアルがある為、それを参照利用してください。似たテクスチャを二重に導入する恐れがある為です。<br>
 <img width="211" height="67" alt="image" src="https://github.com/user-attachments/assets/5c1e76bc-bdd8-4a32-9f47-38c8c34cd155" />
 <br>
 ### ライセンス
+
+このライセンスはBlenderサンプルとテクスチャに適用されます。
 ・許可<br>
-改変したデータなどは再配布可能です。<br>
-このデータを元に作成した場合は、製作元であるここのリンクを貼ってください。<br>
-ダウンロード者同士の共有を許可します。<br>
+.blendとテクスチャデータは再配布可能です。
+このデータを元に作成した場合は、製作元であるここのリンクを貼って頂けると嬉しいです。<br>
 ・禁止<br>
-.blendやテクスチャを再配布は禁止です。AGRaceSDK同梱のテクスチャを参照するか、改変または作成してください。<br>
 このサンプルの制作者を偽ることは禁止です。<br>
-ここで配布している.Blendやテクスチャを再配布は禁止です。ただし、許可に記載しているダウンロード者同士の共有は許可されます。<br>
 
 ## AGRace Tools
 AGRaceSDKのコース制作を支援するアドオンです。<br>
@@ -43,13 +41,14 @@ AGRaceSDKのコース制作を支援するアドオンです。<br>
 
 ### インストール
 
-Blender内で更新できる方法を使う場合は、`Edit > Preferences > Get Extensions`のリポジトリ設定から「Add Remote Repository」を選び、次のURLを登録します。READMEのURLをクリックするだけではBlenderへの登録は行われないため、URLをコピーして貼り付けてください。
+
+Blender内で更新できる方法を使う場合は、`Edit > Preferences > Get Extensions`のリポジトリ設定から「Add Remote Repository」を選び、次のURLをコピーして貼り付けてください。
 
 `https://lubin851.github.io/AGRaceBlenderSample/index.json`
 
 一覧を更新して`AGRace Tools`を検索・インストールし、有効にします。更新版が公開されたら同じ画面でリモートの一覧を更新し、表示された更新を適用します。起動時の更新確認はBlenderのリポジトリ設定で任意に有効化できます。
 
-ZIPを直接使う場合は、上の最新版ZIPを展開せずに保存し、`Edit > Preferences > Get Extensions`の右上メニューから`Install from Disk`で指定します。ZIPのドラッグ＆ドロップでも導入できます。ただし、この方法はローカルインストールになり、上記リポジトリからの更新対象にはなりません。
+ZIPをダウンロードする場合は[こちらからダウンロード](https://lubin851.github.io/AGRaceBlenderSample/download.html?file=addon)　してZIPを展開せずに保存し、`Edit > Preferences > Get Extensions`の右上メニューから`Install from Disk`で指定します。ZIPのドラッグ＆ドロップでも導入できます。ただし、この方法はローカルインストールになり、上記リポジトリからの更新対象にはなりません。
 
 導入後、3D Viewportで`N`を押し、`AGRace Tools`タブを開きます。
 
