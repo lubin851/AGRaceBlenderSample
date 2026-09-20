@@ -1,6 +1,6 @@
 [The English manual is available after the Japanese version.](#english-manual)
 
-# AGRace Tools 0.3.0
+# AGRace Tools 0.3.x
 
 AGRace Toolsは、AGRaceSDKのコース制作を支援するために開発されたBlender Extensionです。AGRaceSDK本体には同梱せず、作者が案内する公開配布経路からサポートツールとして提供します。AGRaceSDK以外の用途にも使用できます。
 
@@ -12,7 +12,7 @@ AGRace Toolsは、AGRaceSDKのコース制作を支援するために開発さ�
 
 ## インストール
 
-Blender内で更新したい場合は、`Edit > Preferences > Get Extensions`のリポジトリ設定から`Add Remote Repository`を選び、次のURLを登録します。
+Blender内で更新したい場合は、`編集 > プリファレンス > エクステンションを入手`のリポジトリ設定から`リポジトリ`を選び、次のURLを登録します。
 
 `https://lubin851.github.io/AGRaceBlenderSample/index.json`
 
@@ -20,13 +20,13 @@ Blender内で更新したい場合は、`Edit > Preferences > Get Extensions`の
 
 ZIPを直接使う場合は、[最新版ZIP](https://lubin851.github.io/AGRaceBlenderSample/download.html?file=addon)を展開せず保存し、右上メニューの`Install from Disk`で指定します。ZIPファイルをBlenderウィンドウへドラッグ＆ドロップしてもインストールできます。
 
-`Install from Disk`はローカルリポジトリへの導入です。この方法で入れたものはリモートリポジトリからの更新対象になりません。
+`ディスクからインストール`はローカルリポジトリへの導入です。この方法で入れたものはリモートリポジトリからの更新対象になりません。
 
 ## 更新
 
-リモートリポジトリから導入した場合は、`Get Extensions`でリモートの一覧を更新し、更新版が表示されたら利用者が適用します。起動時の更新確認はリポジトリ設定で任意に有効化できますが、更新版のインストールは利用者が行います。作業中の`.blend`は更新前に保存してください。
+リモートリポジトリから導入した場合は、`エクステンションを入手`でリモートの一覧を更新し、更新版が表示されたら利用者が適用します。起動時の更新確認はリポジトリ設定で任意に有効化できますが、更新版のインストールは利用者が行います。作業中の`.blend`は更新前に保存してください。
 
-`Install from Disk`で導入した場合は、配布元から新しいZIPをダウンロードして手動で入れ直します。同じExtension IDの更新・置換確認が出た場合は内容を確認して承認します。UIが古いままなら無効・有効を切り替えるかBlenderを再起動してください。更新として受け付けられない場合は、旧版を無効化して削除し、新しいZIPをインストールします。
+`ディスクからインストール`で導入した場合は、配布元から新しいZIPをダウンロードして手動で入れ直します。同じExtension IDの更新・置換確認が出た場合は内容を確認して承認します。UIが古いままなら無効・有効を切り替えるかBlenderを再起動してください。更新として受け付けられない場合は、旧版を無効化して削除し、新しいZIPをインストールします。
 
 現在は保存対象となる独自のExtension設定を持たないため、削除して再導入してもツール設定の移行は不要です。
 
