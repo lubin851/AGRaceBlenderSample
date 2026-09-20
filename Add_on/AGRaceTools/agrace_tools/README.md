@@ -1,6 +1,6 @@
 [The English manual is available after the Japanese version.](#english-manual)
 
-# AGRace Tools 0.3.x
+# AGRace Tools
 
 AGRace Toolsは、AGRaceSDKのコース制作を支援するために開発されたBlender Extensionです。AGRaceSDK本体には同梱せず、作者が案内する公開配布経路からサポートツールとして提供します。AGRaceSDK以外の用途にも使用できます。
 
